@@ -1350,19 +1350,61 @@ function importAllRecipes(file) {
       const incoming = Array.isArray(data) ? data : (data.recipes || []);
       if (!incoming.length) { showToast('No recipes found in file'); return; }
 
-      if (!confirm(`Import ${incoming.length} recipes? This will merge with your existing ${state.recipes.length} recipes — duplicates will be skipped.`)) return;
+      // Ask whether to merge or replace
+      const el = document.createElement('div');
+      el.id = 'import-choice-sheet';
+      el.innerHTML = `
+        <div class="cat-editor-backdrop"></div>
+        <div class="cat-editor-sheet">
+          <div class="cat-editor-handle"></div>
+          <h3 class="cat-editor-title">Import ${incoming.length} recipes</h3>
+          <p style="font-size:14px;color:var(--text-secondary);margin-bottom:20px">
+            How would you like to import?
+          </p>
+          <button class="btn btn-secondary btn-full" id="import-merge" style="margin-bottom:10px">
+            Merge — add new recipes, keep existing
+          </button>
+          <button class="btn btn-primary btn-full" id="import-replace">
+            Replace all — wipe existing and import fresh
+          </button>
+          <button class="btn btn-secondary btn-full" id="import-cancel" style="margin-top:10px">
+            Cancel
+          </button>
+        </div>`;
+      document.getElementById('app').appendChild(el);
+      requestAnimationFrame(() => el.querySelector('.cat-editor-sheet').classList.add('open'));
 
-      // Merge: skip any recipe whose id already exists
-      let added = 0;
-      for (const recipe of incoming) {
-        if (!state.recipes.find(r => r.id === recipe.id)) {
-          state.recipes.push(recipe);
-          added++;
+      const close = () => {
+        el.querySelector('.cat-editor-sheet').classList.remove('open');
+        setTimeout(() => el.remove(), 280);
+      };
+
+      el.querySelector('.cat-editor-backdrop').addEventListener('click', close);
+      el.querySelector('#import-cancel').addEventListener('click', close);
+
+      el.querySelector('#import-merge').addEventListener('click', () => {
+        close();
+        let added = 0;
+        for (const recipe of incoming) {
+          if (!state.recipes.find(r => r.id === recipe.id)) {
+            state.recipes.push(recipe);
+            added++;
+          }
         }
-      }
-      saveRecipes();
-      renderHome();
-      showToast(`${added} recipes imported ✓`);
+        saveRecipes();
+        renderHome();
+        showToast(`${added} recipes imported ✓`);
+      });
+
+      el.querySelector('#import-replace').addEventListener('click', () => {
+        close();
+        if (!confirm(`This will delete all ${state.recipes.length} existing recipes and replace with the ${incoming.length} from the backup. Are you sure?`)) return;
+        state.recipes = incoming;
+        saveRecipes();
+        renderHome();
+        showToast(`${incoming.length} recipes imported ✓`);
+      });
+
     } catch {
       showToast('Could not read file — is it a valid backup?');
     }
