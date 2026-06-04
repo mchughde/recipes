@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>My Recipes</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#F59E0B">
+
+  <!-- iOS PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Recipes">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ── Home ─────────────────────────────────────────── -->
+  <div id="view-home" class="view">
+    <!-- rendered by app.js -->
+  </div>
+
+  <!-- ── Browse All ───────────────────────────────────── -->
+  <div id="view-browse" class="view">
+    <!-- rendered by app.js -->
+  </div>
+
+  <!-- ── Recipe Detail ────────────────────────────────── -->
+  <div id="view-recipe" class="view">
+    <!-- rendered by app.js -->
+  </div>
+
+  <!-- ── Add / Edit Recipe ────────────────────────────── -->
+  <div id="view-add" class="view">
+    <!-- rendered by app.js -->
+  </div>
+
+  <!-- ── Floating Action Button ───────────────────────── -->
+  <button class="fab" id="fab" aria-label="Add recipe">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 5v14M5 12h14"/>
+    </svg>
+  </button>
+
+</div>
+
+<script src="./seeds.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
