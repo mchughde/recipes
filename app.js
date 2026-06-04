@@ -1298,7 +1298,7 @@ async function exportAllRecipes() {
   const date = new Date().toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
 
   // Always download the JSON backup first
-  const data = { exportedAt: new Date().toISOString(), recipes: state.recipes };
+  const data = { exportedAt: new Date().toISOString(), recipes: state.recipes, catPhotos: getCatPhotos() };
   const jsonBlob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const jsonUrl  = URL.createObjectURL(jsonBlob);
   const jsonLink = document.createElement('a');
@@ -1391,6 +1391,7 @@ function importAllRecipes(file) {
             added++;
           }
         }
+        if (data.catPhotos) localStorage.setItem(CAT_PHOTOS_KEY, JSON.stringify(data.catPhotos));
         saveRecipes();
         renderHome();
         showToast(`${added} recipes imported ✓`);
@@ -1400,6 +1401,7 @@ function importAllRecipes(file) {
         close();
         if (!confirm(`This will delete all ${state.recipes.length} existing recipes and replace with the ${incoming.length} from the backup. Are you sure?`)) return;
         state.recipes = incoming;
+        if (data.catPhotos) localStorage.setItem(CAT_PHOTOS_KEY, JSON.stringify(data.catPhotos));
         saveRecipes();
         renderHome();
         showToast(`${incoming.length} recipes imported ✓`);
