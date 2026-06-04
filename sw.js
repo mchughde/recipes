@@ -4,6 +4,7 @@ const CACHE_NAME = 'recipes-v28';
 const isAppFile = url =>
   url.hostname === 'localhost' ||
   url.hostname === '127.0.0.1' ||
+   url.hostname === 'mchughde.github.io' ||
   /^\d+\.\d+\.\d+\.\d+$/.test(url.hostname); // e.g. 192.168.x.x on iPhone
 
 self.addEventListener('install', () => self.skipWaiting());
