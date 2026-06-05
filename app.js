@@ -6,10 +6,10 @@ const STORAGE_KEY = 'recipes_v2';
 const UNSPLASH_W  = 800;
 
 const CATEGORIES = [
-  { id: 'pasta',       label: 'Pasta',             icon: '🍝',
-    img: 'https://www.recipetineats.com/tachyon/2025/03/Lasagna_6-1.jpg?resize=1200%2C1499&zoom=0.54' },
   { id: 'soups',       label: 'Soups',             icon: '🍲',
     img: 'https://img.taste.com.au/mFCAaPnT/w720-h480-cfill-q80/taste/2016/11/chicken-and-sweet-corn-soup-3787-1.jpeg' },
+  { id: 'pasta',       label: 'Pasta',             icon: '🍝',
+    img: 'https://www.recipetineats.com/tachyon/2025/03/Lasagna_6-1.jpg?resize=1200%2C1499&zoom=0.54' },
   { id: 'chicken',     label: 'Chicken',           icon: '🍗',
     img: 'https://img.taste.com.au/rWwpGiw8/w720-h480-cfill-q80/taste/2020/03/apricot-chicken-tray-bake-159131-1.jpg' },
   { id: 'meat',        label: 'Meat',              icon: '🥩',

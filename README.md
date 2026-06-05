@@ -32,7 +32,7 @@ Always use a photo URL — a direct link to an image on a recipe website. These 
 
 ## Categories
 
-Pasta · Soups · Chicken · Meat · Seafood · Light Meals · Desserts & Slices · Other
+Soups · Pasta · Chicken · Meat · Seafood · Light Meals · Desserts & Slices · Other
 
 ---
 
