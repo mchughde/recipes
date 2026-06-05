@@ -24,39 +24,6 @@ const CATEGORIES = [
     img: 'https://simply-delicious-food.com/wp-content/uploads/2024/11/Cheese-Board6.jpg.webp' },
 ];
 
-const SAMPLE_RECIPE = {
-  id: 'sample-bolognese',
-  title: 'Spaghetti Bolognese',
-  category: 'pasta',
-  image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&fit=crop&q=80',
-  ingredients: [
-    '400g spaghetti',
-    '500g beef mince',
-    '1 large onion, finely diced',
-    '3 garlic cloves, minced',
-    '2 carrots, finely diced',
-    '2 celery sticks, finely diced',
-    '400g tin crushed tomatoes',
-    '2 tbsp tomato paste',
-    '125ml red wine',
-    '1 tsp dried oregano',
-    '1 tsp dried basil',
-    'Salt and pepper to taste',
-    'Parmesan cheese, to serve',
-    'Fresh basil leaves, to garnish',
-  ],
-  method: [
-    'Heat a large heavy-based pan over medium-high heat. Add a drizzle of olive oil, then brown the mince in batches, breaking it up as it cooks. Remove and set aside.',
-    'In the same pan, reduce heat to medium. Add the onion, carrot and celery and cook for 8–10 minutes until soft and golden. Add the garlic and cook for a further 2 minutes.',
-    'Pour in the red wine and let it bubble for 2–3 minutes, scraping up any browned bits from the bottom of the pan.',
-    'Return the mince to the pan. Add the crushed tomatoes, tomato paste, oregano and basil. Season generously with salt and pepper.',
-    'Reduce heat to low, cover and simmer for at least 45 minutes (longer is better — up to 2 hours), stirring occasionally. Add a splash of water if it thickens too much.',
-    'Cook the spaghetti according to packet instructions until al dente. Reserve a cup of pasta water before draining.',
-    'Toss the drained pasta through the Bolognese, adding a splash of pasta water to loosen if needed.',
-    'Serve immediately, topped with freshly grated Parmesan and torn basil leaves.',
-  ],
-  createdAt: Date.now(),
-};
 
 // ── State ──────────────────────────────────────────────────────────────────
 
@@ -86,12 +53,6 @@ function loadRecipes() {
   // First-run seed: populate from seeds.js if localStorage is empty
   if (state.recipes.length === 0 && typeof SEED_RECIPES !== 'undefined') {
     state.recipes = [...SEED_RECIPES];
-    if (!state.recipes.find(r => r.id === 'sample-bolognese')) {
-      state.recipes.unshift(SAMPLE_RECIPE);
-    }
-    saveRecipes();
-  } else if (!state.recipes.find(r => r.id === 'sample-bolognese')) {
-    state.recipes.unshift(SAMPLE_RECIPE);
     saveRecipes();
   }
   // Auto-assign photos to any recipe that doesn't have one
