@@ -1,11 +1,11 @@
-const CACHE_NAME = 'recipes-v28';
+const CACHE_NAME = 'recipes-v30';
 
-// Is the request for our local app files (Mac or iPhone via IP)?
+// Is the request for our app files (local Mac, iPhone via IP, or GitHub Pages)?
 const isAppFile = url =>
   url.hostname === 'localhost' ||
   url.hostname === '127.0.0.1' ||
-   url.hostname === 'mchughde.github.io' ||
-  /^\d+\.\d+\.\d+\.\d+$/.test(url.hostname); // e.g. 192.168.x.x on iPhone
+  /^\d+\.\d+\.\d+\.\d+$/.test(url.hostname) || // e.g. 192.168.x.x on iPhone
+  url.hostname === 'mchughde.github.io';
 
 self.addEventListener('install', () => self.skipWaiting());
 

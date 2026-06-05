@@ -6,20 +6,22 @@ const STORAGE_KEY = 'recipes_v2';
 const UNSPLASH_W  = 800;
 
 const CATEGORIES = [
-  { id: 'pasta',       label: 'Pasta',       icon: '🍝',
-    img: 'https://images.unsplash.com/photo-1556761223-4c4282c73f77?w=400&fit=crop&q=75' },
-  { id: 'soups',       label: 'Soups',       icon: '🍲',
-    img: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=400&fit=crop&q=75' },
-  { id: 'chicken',     label: 'Chicken',     icon: '🍗',
-    img: 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&fit=crop&q=75' },
-  { id: 'meat',        label: 'Meat',        icon: '🥩',
-    img: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&fit=crop&q=75' },
-  { id: 'light-meals', label: 'Light Meals', icon: '🥗',
-    img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop&q=75' },
-  { id: 'desserts',    label: 'Desserts',    icon: '🍰',
-    img: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&fit=crop&q=75' },
-  { id: 'other',       label: 'Other',       icon: '🍴',
-    img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&fit=crop&q=75' },
+  { id: 'pasta',       label: 'Pasta',             icon: '🍝',
+    img: 'https://www.recipetineats.com/tachyon/2025/03/Lasagna_6-1.jpg?resize=1200%2C1499&zoom=0.54' },
+  { id: 'soups',       label: 'Soups',             icon: '🍲',
+    img: 'https://img.taste.com.au/mFCAaPnT/w720-h480-cfill-q80/taste/2016/11/chicken-and-sweet-corn-soup-3787-1.jpeg' },
+  { id: 'chicken',     label: 'Chicken',           icon: '🍗',
+    img: 'https://img.taste.com.au/rWwpGiw8/w720-h480-cfill-q80/taste/2020/03/apricot-chicken-tray-bake-159131-1.jpg' },
+  { id: 'meat',        label: 'Meat',              icon: '🥩',
+    img: 'https://img.taste.com.au/SDKrW8yn/w720-h480-cfill-q80/taste/2016/11/roast-lamb-with-honey-mustard-and-thyme-glaze-102875-1.jpeg' },
+  { id: 'light-meals', label: 'Light Meals',       icon: '🥗',
+    img: 'https://images.immediate.co.uk/production/volatile/sites/30/2022/12/Cheese-and-onion-quiche-183a105.jpg?quality=90&webp=true&resize=900,817' },
+  { id: 'desserts',    label: 'Desserts & Slices', icon: '🍰',
+    img: 'https://img.bestrecipes.com.au/NDjw3fEX/w720-h480-cfill-q90/br/2020/08/simplicity-chocolate-cake-959446-1.jpg' },
+  { id: 'seafood',     label: 'Seafood',           icon: '🐟',
+    img: 'https://www.coles.com.au/_next/image?url=https%3A%2F%2Fwww.coles.com.au%2F%2Fcontent%2Fdam%2Fcoles%2Fcusp%2Frecipes-inspiration%2Fwfd%2Fwinter26-wfd%2FRoastedSalmonwithTahiniSauce_3386-480x288.jpg&w=1920&q=90' },
+  { id: 'other',       label: 'Other',             icon: '🍴',
+    img: 'https://simply-delicious-food.com/wp-content/uploads/2024/11/Cheese-Board6.jpg.webp' },
 ];
 
 const SAMPLE_RECIPE = {
@@ -1074,6 +1076,7 @@ const PHOTO_POOLS = {
   'meat':        ['1529692236671-f1f6cf9683ba', '1546069901-ba9599a7e63c', '1568901346375-23c9450c58cd', '1414235077428-338989a2e8c0'],
   'light-meals': ['1525351484163-7529414344d8', '1565299624946-b28f40a0ae38', '1560717845-968823efbee1', '1533089860892-a7c6f0a88666'],
   'desserts':    ['1488477181946-6428a0291777', '1550617931-e17a7b70dce2'],
+  'seafood':     ['1565680018434-b513d5e5fd47', '1559742472-3b8a5f8a5f8a'],
   'other':       ['1504674900247-0877df9cc836', '1565299585323-38d6b0865b47'],
 };
 
@@ -1199,7 +1202,8 @@ function guessCategoryFromTitle(title) {
   if (/soup|broth|chowder|bisque|stock|minestrone|ramen|pho/.test(t)) return 'soups';
   if (/chicken|schnitzel|poultry|rotisserie|tikka|butter chicken/.test(t)) return 'chicken';
   if (/beef|lamb|pork|steak|mince|sausage|meat|roast|curry|taco|nacho|pie|casserole|stew|brisket|meatball|veal|venison|pulled|brisket|rissole|patty|burger|meatloaf|chop|rib|kebab|schnitz/.test(t)) return 'meat';
-  if (/cake|cookie|biscuit|brownie|slice|pudding|tart|muffin|scone|pikelet|pancake|dessert|chocolate|sweet|fudge|cheesecake|tiramisu|mousse|crumble|custard|ice cream|gelato|sorbet|waffle|doughnut|donut/.test(t)) return 'desserts';
+  if (/cake|cookie|biscuit|brownie|slice|pudding|tart|muffin|scone|pikelet|pancake|dessert|chocolate|sweet|fudge|cheesecake|tiramisu|mousse|crumble|custard|ice cream|gelato|sorbet|waffle|doughnut|donut|slice/.test(t)) return 'desserts';
+  if (/fish|salmon|tuna|prawn|shrimp|seafood|mussel|oyster|crab|lobster|calamari|squid|scallop|barramundi|cod|snapper|trout|anchovy|sardine|octopus/.test(t)) return 'seafood';
   if (/salad|wrap|sandwich|toast|fritter|quiche|pizza|rice|fried rice|omelette|omelette|frittata|egg|eggs|scramble|poach|veggie|vegetable|vegetarian|vegan|lentil|bean|tofu|falafel|hummus|tabbouleh|stuffed|zucchini|pumpkin|corn|mushroom/.test(t)) return 'light-meals';
   return '';
 }
@@ -1280,16 +1284,16 @@ function parseOCRText(raw) {
 function recipeToMarkdown(recipe) {
   const catObj = CATEGORIES.find(c => c.id === recipe.category);
   const lines = [
-    `# ${recipe.title}`,
-    `**Category:** ${catObj?.label || recipe.category}`,
+    recipe.title,
+    `Category: ${catObj?.label || recipe.category}`,
     '',
-    '## Ingredients',
-    ...(recipe.ingredients || []).map(i => `- ${i}`),
+    'INGREDIENTS:',
+    ...(recipe.ingredients || []).map(i => `• ${i}`),
     '',
-    '## Method',
+    'METHOD:',
     ...(recipe.method || []).map((s, i) => `${i + 1}. ${s}`),
     '',
-    `*Exported from My Recipes on ${new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}*`,
+    `Exported from My Recipes on ${new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}`,
   ];
   return lines.join('\n');
 }
@@ -1315,14 +1319,14 @@ async function exportAllRecipes() {
     const zip = new JSZip();
     const folder = zip.folder('My Recipes');
     for (const recipe of state.recipes) {
-      const filename = recipe.title.replace(/[^a-z0-9]/gi, '_').replace(/_+/g, '_') + '.md';
+      const filename = recipe.title.replace(/[^a-z0-9]/gi, '_').replace(/_+/g, '_') + '.txt';
       folder.file(filename, recipeToMarkdown(recipe));
     }
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const zipUrl  = URL.createObjectURL(zipBlob);
     const zipLink = document.createElement('a');
     zipLink.href = zipUrl;
-    zipLink.download = `my-recipes-obsidian-${date}.zip`;
+    zipLink.download = `my-recipes-export-${date}.zip`;
     zipLink.click();
     URL.revokeObjectURL(zipUrl);
     showToast(`${state.recipes.length} recipes exported ✓`);
@@ -1422,15 +1426,13 @@ function exportText(recipe) {
     recipe.title,
     `Category: ${catObj?.label || recipe.category}`,
     '',
-    'INGREDIENTS',
-    '──────────',
+    'INGREDIENTS:',
     ...recipe.ingredients.map(i => `• ${i}`),
     '',
-    'METHOD',
-    '──────',
+    'METHOD:',
     ...recipe.method.map((s, i) => `${i + 1}. ${s}`),
     '',
-    `Exported from My Recipes on ${new Date().toLocaleDateString()}`,
+    `Exported from My Recipes on ${new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}`,
   ];
   const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
   const url  = URL.createObjectURL(blob);
