@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recipes-v33';
+const CACHE_NAME = 'recipes-v34';
 
 // Is the request for our app files (local Mac, iPhone via IP, or GitHub Pages)?
 const isAppFile = url =>

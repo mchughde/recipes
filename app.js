@@ -467,6 +467,13 @@ function renderRecipe() {
         <span class="cat-badge">${catObj?.icon || ''} ${catObj?.label || recipe.category}</span>
       </div>
 
+      ${(recipe.prepTime || recipe.cookTime || recipe.servings) ? `
+      <div class="timings-strip">
+        ${recipe.prepTime  ? `<div class="timings-chip"><span class="timings-chip-label">Prep</span>${escHtml(recipe.prepTime)}</div>` : ''}
+        ${recipe.cookTime  ? `<div class="timings-chip"><span class="timings-chip-label">Cook</span>${escHtml(recipe.cookTime)}</div>` : ''}
+        ${recipe.servings  ? `<div class="timings-chip"><span class="timings-chip-label">Serves</span>${escHtml(recipe.servings)}</div>` : ''}
+      </div>` : ''}
+
       <div class="divider"></div>
 
       <p class="section-label">Ingredients</p>
@@ -587,6 +594,27 @@ function renderAdd() {
             <option value="${c.id}" ${(editing?.category ?? 'other') === c.id ? 'selected' : ''}>${c.icon} ${c.label}</option>
           `).join('')}
         </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Time &amp; Servings <span class="form-optional">(optional)</span></label>
+        <div class="timings-row">
+          <div class="timings-field">
+            <label class="timings-label" for="f-prep-time">Prep</label>
+            <input id="f-prep-time" class="form-input" type="text" placeholder="e.g. 20 mins"
+                   value="${escHtml(editing?.prepTime || '')}" autocomplete="off">
+          </div>
+          <div class="timings-field">
+            <label class="timings-label" for="f-cook-time">Cook</label>
+            <input id="f-cook-time" class="form-input" type="text" placeholder="e.g. 40 mins"
+                   value="${escHtml(editing?.cookTime || '')}" autocomplete="off">
+          </div>
+          <div class="timings-field">
+            <label class="timings-label" for="f-servings">Serves</label>
+            <input id="f-servings" class="form-input" type="text" placeholder="e.g. 4"
+                   value="${escHtml(editing?.servings || '')}" autocomplete="off">
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -764,11 +792,14 @@ function clearImagePreview() {
 }
 
 function submitRecipe(editing) {
-  const titleEl  = document.getElementById('f-title');
-  const catEl    = document.getElementById('f-category');
-  const ingEl    = document.getElementById('f-ingredients');
-  const methEl   = document.getElementById('f-method');
-  const imgUrlEl = document.getElementById('f-image-url');
+  const titleEl    = document.getElementById('f-title');
+  const catEl      = document.getElementById('f-category');
+  const ingEl      = document.getElementById('f-ingredients');
+  const methEl     = document.getElementById('f-method');
+  const imgUrlEl   = document.getElementById('f-image-url');
+  const prepTimeEl = document.getElementById('f-prep-time');
+  const cookTimeEl = document.getElementById('f-cook-time');
+  const servingsEl = document.getElementById('f-servings');
 
   const title = titleEl?.value.trim();
   if (!title) { titleEl?.focus(); showToast('Please enter a recipe title'); return; }
@@ -788,6 +819,9 @@ function submitRecipe(editing) {
     ingredients,
     method,
     image,
+    prepTime:    prepTimeEl?.value.trim() || '',
+    cookTime:    cookTimeEl?.value.trim() || '',
+    servings:    servingsEl?.value.trim() || '',
     createdAt:   editing?.createdAt || Date.now(),
     updatedAt:   Date.now(),
   };
@@ -874,6 +908,30 @@ function extractMethod(data) {
   else if (typeof raw === 'string') raw.split(/\n+/).forEach(s => s.trim() && steps.push(s.trim()));
 
   return steps.filter(Boolean);
+}
+
+function parseISO8601Duration(s) {
+  if (!s || typeof s !== 'string') return '';
+  const m = s.match(/PT(?:(\d+)H)?(?:(\d+)M)?/i);
+  if (!m) return s; // return as-is if not parseable
+  const h = parseInt(m[1] || 0);
+  const min = parseInt(m[2] || 0);
+  if (!h && !min) return '';
+  if (h && min) return `${h} hr ${min} mins`;
+  if (h) return `${h} hr`;
+  return `${min} mins`;
+}
+
+function extractTimings(ld) {
+  const prep     = parseISO8601Duration(ld.prepTime);
+  const cook     = parseISO8601Duration(ld.cookTime || ld.totalTime);
+  const yieldRaw = ld.recipeYield;
+  let servings   = '';
+  if (Array.isArray(yieldRaw)) servings = String(yieldRaw[0] || '').trim();
+  else if (yieldRaw)           servings = String(yieldRaw).trim();
+  // Strip trailing "servings" / "serving" / "people" so the label isn't redundant
+  servings = servings.replace(/\s*(servings?|portions?|people)\s*$/i, '').trim();
+  return { prepTime: prep, cookTime: cook, servings };
 }
 
 function extractImage(data, doc) {
@@ -1084,12 +1142,14 @@ async function importFromURL() {
     let ingredients = [];
     let method      = [];
     let image       = '';
+    let timings     = { prepTime: '', cookTime: '', servings: '' };
 
     if (ld) {
       title       = (ld.name || '').trim();
       ingredients = extractIngredients(ld);
       method      = extractMethod(ld);
       image       = extractImage(ld, doc);
+      timings     = extractTimings(ld);
     } else {
       // Fallback: scrape title, image, and try to extract ingredients/method from plain HTML
       title = doc.querySelector('meta[property="og:title"]')?.getAttribute('content')
@@ -1117,6 +1177,9 @@ async function importFromURL() {
     setField('f-ingredients', convertToMetric(ingredients.join('\n')));
     setField('f-method',      convertToMetric(method.join('\n')));
     setField('f-image-url',   image);
+    setField('f-prep-time',   timings.prepTime);
+    setField('f-cook-time',   timings.cookTime);
+    setField('f-servings',    timings.servings);
     const catEl = document.getElementById('f-category');
     if (catEl) catEl.value = guessedCat || 'other';
 
@@ -1242,11 +1305,21 @@ function parseOCRText(raw) {
 
 // ── Backup: Export & Import all recipes ────────────────────────────────────
 
+function timingsLine(recipe) {
+  const parts = [];
+  if (recipe.prepTime) parts.push(`Prep: ${recipe.prepTime}`);
+  if (recipe.cookTime) parts.push(`Cook: ${recipe.cookTime}`);
+  if (recipe.servings) parts.push(`Serves: ${recipe.servings}`);
+  return parts.join('  ·  ');
+}
+
 function recipeToMarkdown(recipe) {
   const catObj = CATEGORIES.find(c => c.id === recipe.category);
+  const tl = timingsLine(recipe);
   const lines = [
     recipe.title,
     `Category: ${catObj?.label || recipe.category}`,
+    ...(tl ? [tl] : []),
     '',
     'INGREDIENTS:',
     ...(recipe.ingredients || []).map(i => `• ${i}`),
@@ -1383,9 +1456,11 @@ function importAllRecipes(file) {
 
 function exportText(recipe) {
   const catObj = CATEGORIES.find(c => c.id === recipe.category);
+  const tl = timingsLine(recipe);
   const lines = [
     recipe.title,
     `Category: ${catObj?.label || recipe.category}`,
+    ...(tl ? [tl] : []),
     '',
     'INGREDIENTS:',
     ...recipe.ingredients.map(i => `• ${i}`),
@@ -1418,7 +1493,11 @@ function exportPDF(recipe) {
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Georgia, 'Times New Roman', serif; max-width: 680px; margin: 48px auto; padding: 0 24px; color: #1a1a1a; line-height: 1.6; }
   h1 { font-size: 32px; font-weight: 700; margin-bottom: 6px; }
-  .meta { font-size: 14px; color: #888; margin-bottom: 32px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .meta { font-size: 14px; color: #888; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .timings { display: flex; gap: 20px; margin-bottom: 28px; }
+  .timings-item { display: flex; flex-direction: column; }
+  .timings-item span:first-child { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #aaa; margin-bottom: 2px; }
+  .timings-item span:last-child { font-size: 15px; color: #1a1a1a; }
   h2 { font-size: 14px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #888; border-top: 1px solid #e5e5e5; padding-top: 20px; margin: 28px 0 16px; }
   ul { list-style: none; }
   ul li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
@@ -1435,6 +1514,12 @@ function exportPDF(recipe) {
 ${recipe.image ? `<img src="${escHtml(recipe.image)}" alt="${escHtml(recipe.title)}">` : ''}
 <h1>${escHtml(recipe.title)}</h1>
 <p class="meta">${escHtml(catObj?.label || recipe.category)}</p>
+${(recipe.prepTime || recipe.cookTime || recipe.servings) ? `
+<div class="timings">
+  ${recipe.prepTime  ? `<div class="timings-item"><span>Prep</span><span>${escHtml(recipe.prepTime)}</span></div>`  : ''}
+  ${recipe.cookTime  ? `<div class="timings-item"><span>Cook</span><span>${escHtml(recipe.cookTime)}</span></div>`  : ''}
+  ${recipe.servings  ? `<div class="timings-item"><span>Serves</span><span>${escHtml(recipe.servings)}</span></div>` : ''}
+</div>` : ''}
 <h2>Ingredients</h2>
 <ul>${recipe.ingredients.map(i => `<li>${escHtml(i)}</li>`).join('')}</ul>
 <h2>Method</h2>
