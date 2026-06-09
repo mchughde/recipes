@@ -12,7 +12,9 @@
 ### Clearing website data will wipe your recipes
 If you ever go to **Settings → Safari → Clear History and Website Data** on your iPhone (or clear browsing data on your Mac), all your recipes may be permanently deleted from that device. This cannot be undone.
 
-**The only protection is a current backup saved in Google Drive.**
+**Exception:** If you have added the app to your iPhone home screen as a shortcut, your recipes are protected from Safari data clearing. They will survive.
+
+**The only full protection is a current backup saved in Google Drive.**
 
 Export a backup every time you add or change anything — this is essential.
 
@@ -23,7 +25,7 @@ Always use a photo URL — a direct link to an image on a recipe website. These 
 
 **How to get a photo URL:**
 1. Find the photo on any recipe website
-2. Right-click on the photo
+2. Long-press the photo on iPhone (or right-click on Mac)
 3. Select **Copy Image Address** (Safari) or **Copy Image Link** (Chrome)
 4. Paste into a new browser tab — if you see just the photo with nothing around it, it's a valid URL
 5. Paste that URL into the recipe's **"Or paste an image URL below"** field
@@ -32,7 +34,30 @@ Always use a photo URL — a direct link to an image on a recipe website. These 
 
 ## Categories
 
-Soups · Pasta · Chicken · Meat · Seafood · Light Meals · Desserts & Slices · Other
+Recipes are organised into 8 categories, shown in this order on the home screen:
+
+**Soups · Pasta · Chicken · Meat · Seafood · Light Meals · Desserts & Slices · Other**
+
+Each category has a default photo. You can change any category photo by tapping **Edit photos** on the home screen.
+
+---
+
+## Recipe Fields
+
+Each recipe can include:
+
+| Field | Required? | Notes |
+|-------|-----------|-------|
+| Title | Yes | |
+| Category | Yes | Defaults to Other if not changed |
+| Prep time | Optional | e.g. 20 mins |
+| Cook time | Optional | e.g. 40 mins |
+| Serves | Optional | e.g. 4 |
+| Photo | Optional | URL only — do not upload from your library |
+| Ingredients | Yes | One per line |
+| Method | Yes | One step per line |
+
+Prep time, cook time and serves are displayed as a strip of chips on the recipe detail screen, and are included when you export a recipe as a text file or PDF.
 
 ---
 
@@ -50,14 +75,36 @@ Soups · Pasta · Chicken · Meat · Seafood · Light Meals · Desserts & Slices
 
 ## Adding or Editing a Recipe
 
-1. Open the app on your iPhone at https://mchughde.github.io/recipes
-2. Add or edit the recipe as normal
-3. For photos, **always use a URL** — do not upload from your photo library
-4. Save the recipe
-5. **Export a backup immediately** (home screen → Export backup)
-6. Save both files to **Google Drive → Recipes → Recipes backup:**
+### Three ways to add a recipe:
+
+**1. Import from a URL**
+Paste the link to any recipe website and tap the arrow button. Works well on most recipe sites. Some sites (like Coles) load their content in a way the app can't read — you'll see an amber warning if this happens, and you'll need to use the paste method instead.
+
+**2. Paste recipe text**
+Copy the recipe text from a website, book, or handwritten card (using Live Text or Google Lens) and paste it into the text box. Tap **Parse into ingredients & method** — the app will fill in the ingredients, method, and make a guess at the category. You will need to type the title yourself.
+
+**3. Fill in manually**
+Type everything directly into the form fields.
+
+---
+
+### After adding or editing a recipe:
+1. Save the recipe
+2. For photos, **always use a URL** — do not upload from your photo library
+3. **Export a backup immediately** (home screen → Export backup)
+4. Save both files to **Google Drive → Recipes → Recipes backup:**
    - `my-recipes-backup-[date].json` — for restoring recipes in the app
    - `my-recipes-export-[date].zip` — individual .txt files, one per recipe, for reference
+
+---
+
+## Exporting Individual Recipes
+
+From any recipe detail screen, you can export that single recipe:
+- **Text** — saves a plain .txt file
+- **PDF** — opens a print-formatted version you can save as PDF
+
+These exports include prep time, cook time and serves if they have been filled in.
 
 ---
 
@@ -115,4 +162,4 @@ When you update the app (new features, bug fixes — done with Claude on the Mac
 - **Recipes disappeared** → Import your most recent JSON backup from Google Drive
 - **Photos not showing** → Paste the photo URL into a browser tab to check it still works. If broken, find a new URL from the original recipe website
 - **App not updating after a code change** → Export backup first, clear Safari website data, then import backup
-- **Need help** → Start a new session with Claude and mention the Recipe App — memory files will have the full context
+- **Need help** → Start a new session with Claude and say *"I'm working on my Recipe App — please read the CLAUDE.md file"*. Claude will have full context immediately.
