@@ -1,0 +1,9 @@
+CLAUDE.md
+.claude/
+node_modules/
+package-lock.json
+make-icon.html
+make-icon.js
+fix.html
+icon-amber.png
+icon-terracotta.png
