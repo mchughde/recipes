@@ -1372,8 +1372,12 @@ async function exportAllRecipes() {
 
 function loadJSZip() {
   return new Promise((resolve, reject) => {
+    // Locked to one exact version by its checksum: every app on mchughde.github.io
+    // shares browser storage, so a changed copy of this file could read all of it.
     const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js';
+    s.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.2/dist/jszip.min.js';
+    s.integrity = 'sha384-DdGlNq+wVXAn83gXqwyeFHB7iyXy6L0rLrNzgDmhKWPjiJLg9vj6qosYmZmkMfQ+';
+    s.crossOrigin = 'anonymous';
     s.onload = resolve;
     s.onerror = reject;
     document.head.appendChild(s);
